@@ -1,4 +1,5 @@
-SERVER_ADDRESS = = "127.0.0.1"
+SERVER_ADDRESS = "mt.matematicasuperpiatta.it"
+--SERVER_ADDRESS = = "127.0.0.1"
 URL_GET = "http://"..SERVER_ADDRESS..":29999"
 local http = require "socket.http"
 local data = ""
