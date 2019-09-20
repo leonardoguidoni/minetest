@@ -132,11 +132,11 @@ local function init_globals()
 		tv_main:add(tabs.simple_main)
 	else
 		tv_main:set_autosave_tab(true)
-		tv_main:add(tabs.local_game)
+--		tv_main:add(tabs.local_game)
 		tv_main:add(tabs.play_online)
 	end
 
-	tv_main:add(tabs.content)
+--	tv_main:add(tabs.content)
 	tv_main:add(tabs.settings)
 	tv_main:add(tabs.credits)
 

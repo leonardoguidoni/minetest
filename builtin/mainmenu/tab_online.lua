@@ -1,3 +1,13 @@
+SERVER_ADDRESS = = "127.0.0.1"
+URL_GET = "http://"..SERVER_ADDRESS..":29999"
+local http = require "socket.http"
+local data = ""
+local function collect(chunk)
+  if chunk ~= nil then
+    data = data .. chunk
+    end
+  return true
+end
 --Minetest
 --Copyright (C) 2014 sapier
 --
@@ -20,7 +30,7 @@ local function get_formspec(tabview, name, tabdata)
 	-- Update the cached supported proto info,
 	-- it may have changed after a change by the settings menu.
 	common_update_cached_supp_proto()
-	local fav_selected
+	local fav_selected = nil
 	if menudata.search_result then
 		fav_selected = menudata.search_result[tabdata.fav_selected]
 	else
@@ -33,29 +43,27 @@ local function get_formspec(tabview, name, tabdata)
 
 	local retval =
 		-- Search
-		"field[0.15,0.075;5.91,1;te_search;;" .. core.formspec_escape(tabdata.search_for) .. "]" ..
-		"button[5.62,-0.25;1.5,1;btn_mp_search;" .. fgettext("Search") .. "]" ..
-		"image_button[6.97,-.165;.83,.83;" .. core.formspec_escape(defaulttexturedir .. "refresh.png")
-			.. ";btn_mp_refresh;]" ..
-
-		-- Address / Port
-		"label[7.75,-0.25;" .. fgettext("Address / Port") .. "]" ..
-		"field[8,0.65;3.25,0.5;te_address;;" ..
-			core.formspec_escape(core.settings:get("address")) .. "]" ..
-		"field[11.1,0.65;1.4,0.5;te_port;;" ..
-			core.formspec_escape(core.settings:get("remote_port")) .. "]" ..
-
+--		"field[0.15,0.075;5.91,1;te_search;;" .. core.formspec_escape(tabdata.search_for) .. "]" ..
+--		"button[5.62,-0.25;1.5,1;btn_mp_search;" .. fgettext("Search") .. "]" ..
+--		"image_button[6.97,-.165;.83,.83;" .. core.formspec_escape(defaulttexturedir .. "refresh.png")
+--			.. ";btn_mp_refresh;]" ..
+		-- Address / Port 
+		"label[4.35,0.35;" .. fgettext("MATEMATICA SUPERPIATTA ") .. "]" ..
+--		"field[6,0.75;4.70,0.5;te_address;;" ..
+--			core.formspec_escape(core.settings:get("address")) .. "]" ..
+--		"field[11.1,0.75;1.4,0.5;te_port;;" ..
+--			core.formspec_escape(core.settings:get("remote_port")) .. "]" ..
 		-- Name / Password
-		"label[7.75,0.95;" .. fgettext("Name / Password") .. "]" ..
-		"field[8,1.85;2.9,0.5;te_name;;" ..
-			core.formspec_escape(core.settings:get("name")) .. "]" ..
-		"pwdfield[10.73,1.85;1.77,0.5;te_pwd;]" ..
+--		"label[3.75,1.05;" .. fgettext("Nome                                                      Password") .. "]" ..
+--		"field[3.75,1.95;3.75,0.5;te_name;;" ..
+--			core.formspec_escape(core.settings:get("name")) .. "]" ..
+--		"pwdfield[7.78,1.95;1.77,0.5;te_pwd;]" ..
 
 		-- Description Background
-		"box[7.73,2.25;4.25,2.6;#999999]"..
+--		"box[7.73,2.25;4.25,2.6;#999999]"..
 
 		-- Connect
-		"button[9.88,4.9;2.3,1;btn_mp_connect;" .. fgettext("Connect") .. "]"
+		"button[5.28,2.9;2.3,1;btn_mp_connect;" .. fgettext("Inizia") .. "]"
 
 	if tabdata.fav_selected and fav_selected then
 		if gamedata.fav then
@@ -69,19 +77,20 @@ local function get_formspec(tabview, name, tabdata)
 	end
 
 	--favourites
-	retval = retval .. "tablecolumns[" ..
-		image_column(fgettext("Favorite"), "favorite") .. ";" ..
-		image_column(fgettext("Ping")) .. ",padding=0.25;" ..
-		"color,span=3;" ..
-		"text,align=right;" ..                -- clients
-		"text,align=center,padding=0.25;" ..  -- "/"
-		"text,align=right,padding=0.25;" ..   -- clients_max
-		image_column(fgettext("Creative mode"), "creative") .. ",padding=1;" ..
-		image_column(fgettext("Damage enabled"), "damage") .. ",padding=0.25;" ..
-		image_column(fgettext("PvP enabled"), "pvp") .. ",padding=0.25;" ..
-		"color,span=1;" ..
-		"text,padding=1]" ..
-		"table[-0.15,0.6;7.75,5.15;favourites;"
+        retval = retval
+--	retval = retval .. "tablecolumns[" ..
+--		image_column(fgettext("Favorite"), "favorite") .. ";" ..
+--		image_column(fgettext("Ping")) .. ",padding=0.25;" ..
+--		"color,span=3;" ..
+--		"text,align=right;" ..                -- clients
+--		"text,align=center,padding=0.25;" ..  -- "/"
+--		"text,align=right,padding=0.25;" ..   -- clients_max
+--		image_column(fgettext("Creative mode"), "creative") .. ",padding=1;" ..
+--		image_column(fgettext("Damage enabled"), "damage") .. ",padding=0.25;" ..
+--		image_column(fgettext("PvP enabled"), "pvp") .. ",padding=0.25;" ..
+--		"color,span=1;" ..
+--		"text,padding=1]" ..
+--		"table[-0.15,0.6;7.75,5.15;favourites;"
 
 	if menudata.search_result then
 		for i = 1, #menudata.search_result do
@@ -134,11 +143,11 @@ end
 --------------------------------------------------------------------------------
 local function main_button_handler(tabview, fields, name, tabdata)
 	local serverlist = menudata.search_result or menudata.favorites
-
-	if fields.te_name then
-		gamedata.playername = fields.te_name
-		core.settings:set("name", fields.te_name)
-	end
+  
+--	if fields.te_name then
+		gamedata.playername = 'test'
+		core.settings:set("name", 'test')
+--	end
 
 	if fields.favourites then
 		local event = core.explode_table_event(fields.favourites)
@@ -152,14 +161,30 @@ local function main_button_handler(tabview, fields, name, tabdata)
 					return true
 				end
 
-				gamedata.address    = fav.address
-				gamedata.port       = fav.port
-				gamedata.playername = fields.te_name
+--				gamedata.address    = fav.address
+--				gamedata.port       = fav.port
+--  GET PORT NUMBER BY HTTP REQUEST 
+                local ok, statusCode, headers, statusText = http.request {
+                  method = "GET",
+                  url = URL_GET,
+                  sink = collect
+                }
+                print("ok\t",         ok)
+                print("url",url)
+                print("statusCode", statusCode)
+                print("statusText", statusText)
+                print("headers:")
+                print("data", data)
+                 gamedata.address =   SERVER_ADDRESS
+                gamedata.port       = data
+--  GET PORT NUMBER BY HTTP REQUEST 
+
+				gamedata.playername = 'test'
 				gamedata.selected_world = 0
 
-				if fields.te_pwd then
-					gamedata.password = fields.te_pwd
-				end
+--				if fields.te_pwd then
+					gamedata.password = ""
+--				end
 
 				gamedata.servername        = fav.name
 				gamedata.serverdescription = fav.description
@@ -237,7 +262,7 @@ local function main_button_handler(tabview, fields, name, tabdata)
 		asyncOnlineFavourites()
 		tabdata.fav_selected = nil
 
-		core.settings:set("address", "")
+		core.settings:set("address", "ms.matematicasuperpiatta.it")
 		core.settings:set("remote_port", "30000")
 		return true
 	end
@@ -273,8 +298,8 @@ local function main_button_handler(tabview, fields, name, tabdata)
 			for k = 1, #keywords do
 				local keyword = keywords[k]
 				if server.name then
-					local sername = server.name:lower()
-					local _, count = sername:gsub(keyword, keyword)
+					local name = server.name:lower()
+					local _, count = name:gsub(keyword, keyword)
 					found = found + count * 4
 				end
 
@@ -308,12 +333,31 @@ local function main_button_handler(tabview, fields, name, tabdata)
 		return true
 	end
 
-	if (fields.btn_mp_connect or fields.key_enter)
-			and fields.te_address ~= "" and fields.te_port then
-		gamedata.playername = fields.te_name
-		gamedata.password   = fields.te_pwd
-		gamedata.address    = fields.te_address
-		gamedata.port       = fields.te_port
+        
+--	if (fields.btn_mp_connect or fields.key_enter)
+--			and fields.te_address ~= "" and fields.te_port then
+	if (fields.btn_mp_connect or fields.key_enter) then
+ 
+		gamedata.playername = 'test'
+		gamedata.password   = ''
+--		gamedata.address    = fields.te_address
+--		gamedata.port       = fields.te_port
+--  GET PORT NUMBER BY HTTP REQUEST - START
+                local ok, statusCode, headers, statusText = http.request {
+                  method = "GET",
+                  url = URL_GET,
+                  sink = collect
+                }
+                print("ok\t",         ok)
+                print("url",url)
+                print("statusCode", statusCode)
+                print("statusText", statusText)
+                print("headers:")
+                print("data", data)
+                gamedata.address = SERVER_ADDRESS
+		gamedata.port       = data
+--  GET PORT NUMBER BY HTTP REQUEST - END
+                 
 		gamedata.selected_world = 0
 		local fav_idx = core.get_table_index("favourites")
 		local fav = serverlist[fav_idx]
@@ -335,8 +379,10 @@ local function main_button_handler(tabview, fields, name, tabdata)
 			gamedata.serverdescription = ""
 		end
 
-		core.settings:set("address",     fields.te_address)
-		core.settings:set("remote_port", fields.te_port)
+--		core.settings:set("address",     fields.te_address)
+--		core.settings:set("remote_port", fields.te_port)
+		core.settings:set("address",     "")
+		core.settings:set("remote_port", "")
 
 		core.start()
 		return true
