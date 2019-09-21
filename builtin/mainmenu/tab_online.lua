@@ -176,7 +176,6 @@ local function main_button_handler(tabview, fields, name, tabdata)
                   sink = collect
                 }
                 print("ok\t",         ok)
-                print("url",url)
                 print("statusCode", statusCode)
                 print("statusText", statusText)
                 print("headers:")
