@@ -1,5 +1,5 @@
-SERVER_ADDRESS = "mt.matematicasuperpiatta.it"
---SERVER_ADDRESS = = "127.0.0.1"
+SERVER_ADDRESS = "mt.matematicasuperpiatta.it" 
+--SERVER_ADDRESS = "0.0.0.0"
 URL_GET = "http://"..SERVER_ADDRESS..":29999"
 local http = require "socket.http"
 local data = ""
@@ -48,8 +48,13 @@ local function get_formspec(tabview, name, tabdata)
 --		"button[5.62,-0.25;1.5,1;btn_mp_search;" .. fgettext("Search") .. "]" ..
 --		"image_button[6.97,-.165;.83,.83;" .. core.formspec_escape(defaulttexturedir .. "refresh.png")
 --			.. ";btn_mp_refresh;]" ..
+		"image[-0.20,1.8;4.5,4.5;" .. core.formspec_escape(defaulttexturedir .. "cubes.png").."]"..
+		"image[8.40,0.9;4.3,2.5;" .. core.formspec_escape(defaulttexturedir .. "univaq.png").."]"..
+		"image[4.3,-3.6.0;4.3,2.9;" .. core.formspec_escape(defaulttexturedir .. "street_science.png").."]"..
+		"image[9.40,3.95;1.8,1.8;" .. core.formspec_escape(defaulttexturedir .. "stemblocks_logo_small.png").."]"..
 		-- Address / Port 
-		"label[4.35,0.35;" .. fgettext("MATEMATICA SUPERPIATTA ") .. "]" ..
+		"label[4.35,0.6;" .. fgettext("MATEMATICA SUPERPIATTA ") .. "]" ..
+		"label[4.00,1.3;" .. fgettext("UN VIDEOGIOCO PER LA SCUOLA") .. "]" ..
 --		"field[6,0.75;4.70,0.5;te_address;;" ..
 --			core.formspec_escape(core.settings:get("address")) .. "]" ..
 --		"field[11.1,0.75;1.4,0.5;te_port;;" ..
@@ -64,7 +69,7 @@ local function get_formspec(tabview, name, tabdata)
 --		"box[7.73,2.25;4.25,2.6;#999999]"..
 
 		-- Connect
-		"button[5.28,2.9;2.3,1;btn_mp_connect;" .. fgettext("Inizia") .. "]"
+		"button[5.00,2.6;2.3,1;btn_mp_connect;" .. fgettext("Inizia") .. "]"
 
 	if tabdata.fav_selected and fav_selected then
 		if gamedata.fav then
