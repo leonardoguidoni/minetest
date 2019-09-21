@@ -13,7 +13,7 @@
 	<application
 		android:allowBackup="true"
 		android:icon="@mipmap/ic_launcher"
-		android:label="${project}"
+		android:label="MATEMATICA SUPERPIATTA"
 		android:resizeableActivity="false">
 
 		<meta-data
@@ -23,7 +23,7 @@
 		<activity
 			android:name=".MainActivity"
 			android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-			android:label="${project}"
+			android:label="MATEMATICA SUPERPIATTA"
 			android:launchMode="singleTask"
 			android:screenOrientation="sensorLandscape"
 			android:theme="@style/AppTheme">
