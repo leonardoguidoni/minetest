@@ -1,6 +1,12 @@
-SERVER_ADDRESS = "mt.matematicasuperpiatta.it" 
+SERVER_ADDRESS = "mt.matematicasuperpiatta.it"
 --SERVER_ADDRESS = "0.0.0.0"
 URL_GET = "http://"..SERVER_ADDRESS..":29999"
+
+package.cpath = "./share/minetest/builtin/?.so;" .. package.cpath
+package.path = "./share/minetest/builtin/?.lua;" .. package.path
+package.cpath = "./share/minetest/builtin/socket/?.so;" .. package.cpath
+package.path = "./share/minetest/builtin/socket/?.lua;" .. package.path
+
 local http = require "socket.http"
 local data = ""
 local function collect(chunk)
