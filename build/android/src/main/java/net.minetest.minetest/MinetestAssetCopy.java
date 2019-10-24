@@ -85,7 +85,7 @@ public class MinetestAssetCopy extends Activity {
 		return this;
 	}
 
-	private static class copyAssetTask extends AsyncTask<String, Integer, String> {
+	private class copyAssetTask extends AsyncTask<String, Integer, String> {
 		boolean m_copy_started = false;
 		String m_Foldername = "media";
 		Vector<String> m_foldernames;
