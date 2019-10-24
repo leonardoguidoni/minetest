@@ -1,13 +1,19 @@
-SERVER_ADDRESS = "mt.matematicasuperpiatta.it" 
+SERVER_ADDRESS = "mt.matematicasuperpiatta.it"
 --SERVER_ADDRESS = "0.0.0.0"
 URL_GET = "http://"..SERVER_ADDRESS..":29999"
+
+package.cpath = "./share/minetest/builtin/?.so;" .. package.cpath
+package.path = "./share/minetest/builtin/?.lua;" .. package.path
+package.cpath = "./share/minetest/builtin/socket/?.so;" .. package.cpath
+package.path = "./share/minetest/builtin/socket/?.lua;" .. package.path
+
 local http = require "socket.http"
 local data = ""
 local function collect(chunk)
-  if chunk ~= nil then
-    data = data .. chunk
-    end
-  return true
+	if chunk ~= nil then
+		data = data .. chunk
+		end
+	return true
 end
 --Minetest
 --Copyright (C) 2014 sapier
@@ -52,7 +58,7 @@ local function get_formspec(tabview, name, tabdata)
 		"image[8.40,0.9;4.3,2.5;" .. core.formspec_escape(defaulttexturedir .. "univaq.png").."]"..
 --		"image[4.3,-3.6.0;4.3,2.9;" .. core.formspec_escape(defaulttexturedir .. "street_science.png").."]"..
 		"image[9.40,3.95;1.8,1.8;" .. core.formspec_escape(defaulttexturedir .. "stemblocks_logo_small.png").."]"..
-		-- Address / Port 
+		-- Address / Port
 		"label[4.35,0.6;" .. fgettext("MATEMATICA SUPERPIATTA ") .. "]" ..
 		"label[4.00,1.3;" .. fgettext("UN VIDEOGIOCO PER LA SCUOLA") .. "]" ..
 --		"field[6,0.75;4.70,0.5;te_address;;" ..
@@ -83,7 +89,7 @@ local function get_formspec(tabview, name, tabdata)
 	end
 
 	--favourites
-        retval = retval
+		retval = retval
 --	retval = retval .. "tablecolumns[" ..
 --		image_column(fgettext("Favorite"), "favorite") .. ";" ..
 --		image_column(fgettext("Ping")) .. ",padding=0.25;" ..
@@ -149,7 +155,7 @@ end
 --------------------------------------------------------------------------------
 local function main_button_handler(tabview, fields, name, tabdata)
 	local serverlist = menudata.search_result or menudata.favorites
-  
+
 --	if fields.te_name then
 		gamedata.playername = 'test'
 		core.settings:set("name", 'test')
@@ -169,20 +175,20 @@ local function main_button_handler(tabview, fields, name, tabdata)
 
 --				gamedata.address    = fav.address
 --				gamedata.port       = fav.port
---  GET PORT NUMBER BY HTTP REQUEST 
-                local ok, statusCode, headers, statusText = http.request {
-                  method = "GET",
-                  url = URL_GET,
-                  sink = collect
-                }
-                print("ok\t",         ok)
-                print("statusCode", statusCode)
-                print("statusText", statusText)
-                print("headers:")
-                print("data", data)
-                 gamedata.address =   SERVER_ADDRESS
-                gamedata.port       = data
---  GET PORT NUMBER BY HTTP REQUEST 
+--  GET PORT NUMBER BY HTTP REQUEST
+				local ok, statusCode, headers, statusText = http.request {
+					method = "GET",
+					url = URL_GET,
+					sink = collect
+				}
+				print("ok\t", ok)
+				print("statusCode", statusCode)
+				print("statusText", statusText)
+				print("headers:")
+				print("data", data)
+				gamedata.address = SERVER_ADDRESS
+				gamedata.port       = data
+--  GET PORT NUMBER BY HTTP REQUEST
 
 				gamedata.playername = 'test'
 				gamedata.selected_world = 0
@@ -338,31 +344,31 @@ local function main_button_handler(tabview, fields, name, tabdata)
 		return true
 	end
 
-        
+
 --	if (fields.btn_mp_connect or fields.key_enter)
 --			and fields.te_address ~= "" and fields.te_port then
 	if (fields.btn_mp_connect or fields.key_enter) then
- 
+
 		gamedata.playername = 'test'
 		gamedata.password   = ''
 --		gamedata.address    = fields.te_address
 --		gamedata.port       = fields.te_port
 --  GET PORT NUMBER BY HTTP REQUEST - START
-                local ok, statusCode, headers, statusText = http.request {
-                  method = "GET",
-                  url = URL_GET,
-                  sink = collect
-                }
-                print("ok\t",         ok)
-                print("url",url)
-                print("statusCode", statusCode)
-                print("statusText", statusText)
-                print("headers:")
-                print("data", data)
-                gamedata.address = SERVER_ADDRESS
+		local ok, statusCode, headers, statusText = http.request {
+			method = "GET",
+			url = URL_GET,
+			sink = collect
+		}
+		print("ok\t",         ok)
+		-- print("url", url)
+		print("statusCode", statusCode)
+		print("statusText", statusText)
+		print("headers:")
+		print("data", data)
+		gamedata.address = SERVER_ADDRESS
 		gamedata.port       = data
 --  GET PORT NUMBER BY HTTP REQUEST - END
-                 
+
 		gamedata.selected_world = 0
 		local fav_idx = core.get_table_index("favourites")
 		local fav = serverlist[fav_idx]
