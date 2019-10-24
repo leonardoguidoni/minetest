@@ -712,6 +712,13 @@ void GUIFormSpecMenu::parseButton(parserData* data, const std::string &element,
 		if (style.isNotDefault(StyleSpec::BGCOLOR)) {
 			e->setColor(style.getColor(StyleSpec::BGCOLOR));
 		}
+		if (style.isNotDefault(StyleSpec::BGCOLOR_HOVERED)) {
+			e->setHoveredColor(style.getColor(StyleSpec::BGCOLOR_HOVERED));
+		}
+		if (style.isNotDefault(StyleSpec::BGCOLOR_PRESSED)) {
+			e->setPressedColor(style.getColor(StyleSpec::BGCOLOR_PRESSED));
+		}
+
 		if (style.isNotDefault(StyleSpec::TEXTCOLOR)) {
 			e->setOverrideColor(style.getColor(StyleSpec::TEXTCOLOR));
 		}
@@ -720,11 +727,17 @@ void GUIFormSpecMenu::parseButton(parserData* data, const std::string &element,
 
 		if (style.isNotDefault(StyleSpec::BGIMG)) {
 			std::string image_name = style.get(StyleSpec::BGIMG, "");
+			std::string hovered_image_name = style.get(StyleSpec::BGIMG_HOVERED, "");
 			std::string pressed_image_name = style.get(StyleSpec::BGIMG_PRESSED, "");
 
 			video::ITexture *texture = 0;
+			video::ITexture *hovered_texture = 0;
 			video::ITexture *pressed_texture = 0;
 			texture = m_tsrc->getTexture(image_name);
+			if (!hovered_image_name.empty())
+				hovered_texture = m_tsrc->getTexture(hovered_image_name);
+			else
+				hovered_texture = texture;
 			if (!pressed_image_name.empty())
 				pressed_texture = m_tsrc->getTexture(pressed_image_name);
 			else
@@ -733,6 +746,8 @@ void GUIFormSpecMenu::parseButton(parserData* data, const std::string &element,
 			e->setUseAlphaChannel(style.getBool(StyleSpec::ALPHA, true));
 			e->setImage(guiScalingImageButton(
 					Environment->getVideoDriver(), texture, geom.X, geom.Y));
+			e->setHoveredImage(guiScalingImageButton(
+					Environment->getVideoDriver(), hovered_texture, geom.X, geom.Y));
 			e->setPressedImage(guiScalingImageButton(
 					Environment->getVideoDriver(), pressed_texture, geom.X, geom.Y));
 			e->setScaleImage(true);
@@ -1208,12 +1223,14 @@ void GUIFormSpecMenu::createTextField(parserData *data, FieldSpec &spec,
 			true, Environment, this, spec.fid, rect, is_editable, is_multiline);
 		e->drop();
 	} else {
-		if (is_multiline)
+		if (is_multiline) {
 			e = new GUIEditBoxWithScrollBar(spec.fdefault.c_str(), true,
 				Environment, this, spec.fid, rect, is_editable, true);
-		else if (is_editable)
+			e->drop();
+		} else if (is_editable) {
 			e = Environment->addEditBox(spec.fdefault.c_str(), rect, true,
 				this, spec.fid);
+		}
 	}
 
 	if (e) {
@@ -1403,8 +1420,10 @@ void GUIFormSpecMenu::parseLabel(parserData* data, const std::string &element)
 		std::vector<std::string> lines = split(text, '\n');
 
 		for (unsigned int i = 0; i != lines.size(); i++) {
-			std::wstring wlabel = unescape_translate(unescape_string(
-				utf8_to_wide(lines[i])));
+			std::wstring wlabel_colors = translate_string(
+				utf8_to_wide(unescape_string(lines[i])));
+			// Without color escapes to get the font dimensions
+			std::wstring wlabel_plain = unescape_enriched(wlabel_colors);
 
 			core::rect<s32> rect;
 
@@ -1421,7 +1440,7 @@ void GUIFormSpecMenu::parseLabel(parserData* data, const std::string &element)
 
 				rect = core::rect<s32>(
 					pos.X, pos.Y,
-					pos.X + m_font->getDimension(wlabel.c_str()).Width,
+					pos.X + m_font->getDimension(wlabel_plain.c_str()).Width,
 					pos.Y + imgsize.Y);
 
 			} else {
@@ -1443,13 +1462,13 @@ void GUIFormSpecMenu::parseLabel(parserData* data, const std::string &element)
 
 				rect = core::rect<s32>(
 					pos.X, pos.Y - m_btn_height,
-					pos.X + m_font->getDimension(wlabel.c_str()).Width,
+					pos.X + m_font->getDimension(wlabel_plain.c_str()).Width,
 					pos.Y + m_btn_height);
 			}
 
 			FieldSpec spec(
 				"",
-				wlabel,
+				wlabel_colors,
 				L"",
 				258+m_fields.size()
 			);
@@ -1616,7 +1635,7 @@ void GUIFormSpecMenu::parseImageButton(parserData* data, const std::string &elem
 		else
 			pressed_texture = texture;
 
-		gui::IGUIButton *e = Environment->addButton(rect, this, spec.fid, spec.flabel.c_str());
+		GUIButton *e = GUIButton::addButton(Environment, rect, this, spec.fid, spec.flabel.c_str());
 
 		if (spec.fname == data->focused_fieldname) {
 			Environment->setFocus(e);
@@ -1814,7 +1833,7 @@ void GUIFormSpecMenu::parseItemImageButton(parserData* data, const std::string &
 			258 + m_fields.size()
 		);
 
-		gui::IGUIButton *e = Environment->addButton(rect, this, spec.fid, L"");
+		gui::IGUIButton *e = GUIButton::addButton(Environment, rect, this, spec.fid, L"");
 
 		auto style = getStyleForElement("item_image_button", spec.fname, "image_button");
 		e->setNotClipped(style.getBool(StyleSpec::NOCLIP, false));
@@ -1881,17 +1900,17 @@ void GUIFormSpecMenu::parseBox(parserData* data, const std::string &element)
 	errorstream<< "Invalid Box element(" << parts.size() << "): '" << element << "'"  << std::endl;
 }
 
-void GUIFormSpecMenu::parseBackgroundColor(parserData *data, const std::string &element)
+void GUIFormSpecMenu::parseBackgroundColor(parserData* data, const std::string &element)
 {
 	std::vector<std::string> parts = split(element,';');
 
 	if (((parts.size() == 1) || (parts.size() == 2)) ||
 			((parts.size() > 2) && (m_formspec_version > FORMSPEC_API_VERSION))) {
-		if (parts.size() == 1) {
-			parseColorString(parts[0], m_bgcolor, false);
-		} else if (parts.size() == 2) {
-			parseColorString(parts[0], m_fullscreen_bgcolor, false);
-			m_bgfullscreen = is_yes(parts[1]);
+		parseColorString(parts[0], m_bgcolor, false);
+
+		if (parts.size() == 2) {
+			std::string fullscreen = parts[1];
+			m_bgfullscreen = is_yes(fullscreen);
 		}
 
 		return;
@@ -2229,8 +2248,8 @@ void GUIFormSpecMenu::parseElement(parserData* data, const std::string &element)
 		return;
 	}
 
-	if (type == "background") {
-		parseBackground(data,description);
+	if (type == "background" || type == "background9") {
+		parseBackground(data, description);
 		return;
 	}
 
@@ -2413,6 +2432,8 @@ void GUIFormSpecMenu::regenerateGui(v2u32 screensize)
 	theme_by_type.clear();
 
 	m_bgfullscreen = false;
+
+	m_formspec_version = 1;
 
 	{
 		v3f formspec_bgcolor = g_settings->getV3F("formspec_default_bg_color");
@@ -2693,7 +2714,7 @@ void GUIFormSpecMenu::regenerateGui(v2u32 screensize)
 					core::rect<s32>(size.X/2-70, pos.Y,
 							(size.X/2-70)+140, pos.Y + (m_btn_height*2));
 			const wchar_t *text = wgettext("Proceed");
-			Environment->addButton(mydata.rect, this, 257, text);
+			GUIButton::addButton(Environment, mydata.rect, this, 257, text);
 			delete[] text;
 		}
 
@@ -2921,7 +2942,8 @@ void GUIFormSpecMenu::drawMenu()
 
 	if (m_bgfullscreen)
 		driver->draw2DRectangle(m_fullscreen_bgcolor, allbg, &allbg);
-	driver->draw2DRectangle(m_bgcolor, AbsoluteRect, &AbsoluteClippingRect);
+	else
+		driver->draw2DRectangle(m_bgcolor, AbsoluteRect, &AbsoluteClippingRect);
 
 	m_tooltip_element->setVisible(false);
 

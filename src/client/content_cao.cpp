@@ -523,7 +523,9 @@ void GenericCAO::removeFromScene(bool permanent)
 	// Should be true when removing the object permanently
 	// and false when refreshing (eg: updating visuals)
 	if (m_env && permanent) {
-		clearChildAttachments();
+		// The client does not know whether this object does re-appear to
+		// a later time, thus do not clear child attachments.
+
 		clearParentAttachment();
 	}
 
@@ -1262,18 +1264,19 @@ void GenericCAO::updateTextures(std::string mod)
 					buf->getMaterial().AmbientColor = m_prop.colors[1];
 					buf->getMaterial().DiffuseColor = m_prop.colors[1];
 					buf->getMaterial().SpecularColor = m_prop.colors[1];
-					setMeshColor(mesh, m_prop.colors[1]);
 				} else if (!m_prop.colors.empty()) {
 					buf->getMaterial().AmbientColor = m_prop.colors[0];
 					buf->getMaterial().DiffuseColor = m_prop.colors[0];
 					buf->getMaterial().SpecularColor = m_prop.colors[0];
-					setMeshColor(mesh, m_prop.colors[0]);
 				}
 
 				buf->getMaterial().setFlag(video::EMF_TRILINEAR_FILTER, use_trilinear_filter);
 				buf->getMaterial().setFlag(video::EMF_BILINEAR_FILTER, use_bilinear_filter);
 				buf->getMaterial().setFlag(video::EMF_ANISOTROPIC_FILTER, use_anisotropic_filter);
 			}
+			// Set mesh color (only if lighting is disabled)
+			if (!m_prop.colors.empty() && m_glow < 0)
+				setMeshColor(mesh, m_prop.colors[0]);
 		}
 	}
 }
@@ -1330,10 +1333,17 @@ void GenericCAO::updateAttachments()
 
 	m_attached_to_local = parent && parent->isLocalPlayer();
 
-	if (!parent && m_attachment_parent_id) {
-		//m_is_visible = false; maybe later. needs better handling
-		return;
-	}
+	/*
+	Following cases exist:
+		m_attachment_parent_id == 0 && !parent
+			This object is not attached
+		m_attachment_parent_id != 0 && parent
+			This object is attached
+		m_attachment_parent_id != 0 && !parent
+			This object will be attached as soon the parent is known
+		m_attachment_parent_id == 0 && parent
+			Impossible case
+	*/
 
 	if (!parent) { // Detach or don't attach
 		if (m_matrixnode) {
@@ -1546,7 +1556,7 @@ void GenericCAO::processMessage(const std::string &data)
 
 		if (damage > 0)
 		{
-			if (m_hp <= 0)
+			if (m_hp == 0)
 			{
 				// TODO: Execute defined fast response
 				// As there is no definition, make a smoke puff
@@ -1562,7 +1572,9 @@ void GenericCAO::processMessage(const std::string &data)
 					m_reset_textures_timer += 0.05 * damage;
 				updateTextures(m_current_texture_modifier + "^[brighten");
 			}
-		} else {
+		}
+
+		if (m_hp == 0) {
 			// Same as 'Server::DiePlayer'
 			clearParentAttachment();
 			// Same as 'ObjectRef::l_remove'
