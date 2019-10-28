@@ -19,6 +19,27 @@ jarsigner -verbose -digestalg SHA1 -keystore keystore-minetest-new.jks build/out
 
 ~/android-sdk-linux/build-tools/29.0.2/zipalign -v 4 build/outputs/apk/release/Minetest-release-unsigned.apk build/outputs/apk/release/Minetest-release.apk
 
+# PER INSTALLARE SUL DISPOSITIVO (APK debug o release)
+make install_debug
+make install_release
+
+# PER ABILITARE L'INSTALLAZIONE DEL FILE apk SUL DISPOSITIVO ANDROID
+lsusb
+-prendere nota dei valori idVendor e idProduct: esempio 
+Bus 002 Device 005: ID 18d1:4ee7 Google Inc. -> idVendor = 18d1, idProduct = 4ee7
+
+sudo nano /etc/udev/rules.d/51-android.rules
+    SUBSYSTEM=="usb", ATTR{idVendor}=="<idVendor restituito da lsusb>", ATTR{idProduct}=="<idProduct restituito da lsusb>", MODE="0666", GROUP="plugdev"
+
+sudo udevadm control --reload-rules
+# STACCARE E RIATTACCARE IL DISPOSITIVO
+
+# PER VISUALIZZARE I LOG DI DEBUG DELL'APPLICAZIONE
+avviare Android Studio
+File > Profile or debug APK
+    selezionare APK di debug in /home/leonardo/minetest-at-school/minetest/build/android/build/outputs/apk/debug
+Per visualizzare i log cliccare in basso a sinistra su "6: Logcat"
+    (se il pulsante "6: Logcat" non c'è, View > Tool Window Bars)
 
 # PER RIGENERARE LE CHIAVI CONTENUTE IN UN KEYSTORE DI CUI NON SI CONOSCE LA PASSWORD
 # SCARICARE IL FILE
