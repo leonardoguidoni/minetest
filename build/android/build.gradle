@@ -20,6 +20,7 @@ def irrlicht_revision = "5150"
 def openal_version = "1.18.2"
 def openssl_version = "1.0.2n"
 def sqlite3_version = "3240000"
+def luasocket_version = "2.0.2"
 
 apply plugin: "com.android.application"
 
@@ -147,6 +148,11 @@ task cleanOgg(type: Delete) {
 	delete 'deps/libvorbis-libogg-android'
 }
 
+task cleanLuaSocket(type: Delete) {
+	delete 'deps/luasocket'
+	delete 'deps/luasocket-' + luasocket_version
+}
+
 task cleanSQLite3(type: Delete) {
 	delete 'deps/sqlite-amalgamation-' + sqlite3_version
 	delete 'deps/sqlite-amalgamation-' + sqlite3_version + '.zip'
@@ -154,7 +160,7 @@ task cleanSQLite3(type: Delete) {
 
 task cleanAll(type: Delete, dependsOn: [clean, cleanAssets, cleanIconv,
 		cleanFreetype, cleanIrrlicht, cleanLevelDB, cleanSQLite3, cleanCURL,
-		cleanOpenSSL, cleanOpenAL, cleanOgg]) {
+		cleanOpenSSL, cleanOpenAL, cleanOgg, cleanLuaSocket]) {
 	delete 'deps'
 	delete 'gen'
 	delete 'libs'
