@@ -1,10 +1,54 @@
---- config  2007-10-15 06:21:05.000000000 +0200
-+++ config	2019-10-28 18:33:05.004694909 +0100
+--- config	2007-10-15 06:21:05.000000000 +0200
++++ config_new	2019-10-31 16:59:21.437152751 +0100
+@@ -8,8 +8,8 @@
+ EXT=so
+ SOCKET_V=2.0.2
+ MIME_V=1.0.2
+-SOCKET_SO=socket.$(EXT).$(SOCKET_V) 
+-MIME_SO=mime.$(EXT).$(MIME_V)
++SOCKET_SO=socket.$(EXT)
++MIME_SO=mime.$(EXT)
+ UNIX_SO=unix.$(EXT)
+ 
+ #------
 @@ -18,6 +18,7 @@
  #LUAINC=-I/usr/local/include/lua50
  #LUAINC=-I/usr/local/include/lua5.1
  #LUAINC=-Ilua-5.1.1/src
-+LUAINC=-I/usr/include/lua5.1/
++LUAINC=-I/usr/include/lua5.1/ -I/usr/arm-linux-gnueabi/include/ -I/usr/include/x86_64-linux-gnu/lua5.1-deb-multiarch.h
  
  #------
  # Compat-5.1 directory
+@@ -49,11 +50,30 @@
+ #------
+ # Compiler and linker settings
+ # for Linux
+-CC=gcc
++#CC=gcc
++#DEF=-DLUASOCKET_DEBUG 
++#CFLAGS= $(LUAINC) $(DEF) -pedantic -Wall -O2 -fpic
++#LDFLAGS=-O -shared -fpic
++#LD=gcc 
++
++#------
++# Compiler and linker settings
++# for Android
++#CC=gcc
+ DEF=-DLUASOCKET_DEBUG 
+ CFLAGS= $(LUAINC) $(DEF) -pedantic -Wall -O2 -fpic
+ LDFLAGS=-O -shared -fpic
+-LD=gcc 
++LD=arm-linux-gnueabi-gcc
++
++export TARGET_TOOLCHAIN = arm-linux-androideabi-
++export TARGET_CXXFLAGS_ADDON = $(TARGET_CFLAGS_ADDON)
++export CROSS_CC = arm-linux-gnueabi-gcc
++export COMPILER_VERSION = arm-linux-gnueabi-gcc
++
++export CROSS_PREFIX=${TARGET_TOOLCHAIN}
++export CC=${CROSS_CC}
++export CXX=${CROSS_CXX}
++export TARGET_OS=OS_ANDROID_CROSSCOMPILE
+ 
+ #------
+ # End of makefile configuration
