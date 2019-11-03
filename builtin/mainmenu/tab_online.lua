@@ -3,8 +3,8 @@ SERVER_ADDRESS = "mt.matematicasuperpiatta.it"
 URL_GET = "http://"..SERVER_ADDRESS..":29999"
 
 -- Mac OS-X
-package.cpath = "./minetest_at_school5.01.app/Contents/Resources/share/Mac/?.so;" .. package.cpath
-package.path = "./minetest_at_school5.01.app/Contents/Resources/share/Mac/?.lua;" .. package.path
+package.cpath = "./MS-client-minetest-5.01.app/Contents/Resources/share/Mac/?.so;" .. package.cpath
+package.path = "./MS-client-minetest-5.01.app/Contents/Resources/share/Mac/?.lua;" .. package.path
 -- Android
 package.cpath = "./share/minetest/builtin/?.so;" .. package.cpath
 package.path = "./share/minetest/builtin/?.lua;" .. package.path
