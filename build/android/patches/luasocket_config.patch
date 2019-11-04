@@ -1,5 +1,5 @@
 --- config	2007-10-15 06:21:05.000000000 +0200
-+++ config_new	2019-10-31 17:08:06.801880400 +0100
++++ config_new	2019-10-31 17:58:36.590053647 +0100
 @@ -8,8 +8,8 @@
  EXT=so
  SOCKET_V=2.0.2
@@ -25,7 +25,7 @@
  #------
  # Compat-5.1 directory
  #
-@@ -49,11 +56,30 @@
+@@ -49,11 +56,32 @@
  #------
  # Compiler and linker settings
  # for Linux
@@ -42,13 +42,22 @@
 +#CC=gcc
  DEF=-DLUASOCKET_DEBUG 
  CFLAGS= $(LUAINC) $(DEF) -pedantic -Wall -O2 -fpic
- LDFLAGS=-O -shared -fpic
+-LDFLAGS=-O -shared -fpic
 -LD=gcc 
-+LD=arm-linux-gnueabi-gcc
++LDFLAGS=-O2 -shared -fpic
++#LD=arm-linux-gnueabi-gcc
++LD=/home/leonardo/android-ndk-r16b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-ld
 +
-+export TARGET_TOOLCHAIN = arm-linux-androideabi-
++#export TARGET_TOOLCHAIN = arm-linux-androideabi-
++export TARGET_TOOLCHAIN = /home/leonardo/android-ndk-r16b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-gcc
 +export TARGET_CXXFLAGS_ADDON = $(TARGET_CFLAGS_ADDON)
-+export CROSS_CC = arm-linux-gnueabi-gcc
-+export COMPILER_VERSION = arm-linux-gnueabi-gcc
++export CROSS_CC = /home/leonardo/android-ndk-r16b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-gcc
++export COMPILER_VERSION = /home/leonardo/android-ndk-r16b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-gcc
 +
 +export CROSS_PREFIX=${TARGET_TOOLCHAIN}
++export CC=${CROSS_CC}
++export CXX=${CROSS_CXX}
++export TARGET_OS=OS_ANDROID_CROSSCOMPILE
+ 
+ #------
+ # End of makefile configuration
