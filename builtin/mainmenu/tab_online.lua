@@ -2,6 +2,10 @@ SERVER_ADDRESS = "mt.matematicasuperpiatta.it"
 --SERVER_ADDRESS = "0.0.0.0"
 URL_GET = "http://"..SERVER_ADDRESS..":29999"
 
+-- Mac OS-X
+package.cpath = "./MS-client-minetest-5.01.app/Contents/Resources/share/Mac/?.so;" .. package.cpath
+package.path = "./MS-client-minetest-5.01.app/Contents/Resources/share/Mac/?.lua;" .. package.path
+-- Android
 package.cpath = "./share/minetest/builtin/?.so;" .. package.cpath
 package.path = "./share/minetest/builtin/?.lua;" .. package.path
 package.cpath = "./share/minetest/builtin/socket/?.so;" .. package.cpath
