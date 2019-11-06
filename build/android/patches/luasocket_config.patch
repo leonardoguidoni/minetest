@@ -6,8 +6,8 @@
  MIME_V=1.0.2
 -SOCKET_SO=socket.$(EXT).$(SOCKET_V) 
 -MIME_SO=mime.$(EXT).$(MIME_V)
-+SOCKET_SO=socket.$(EXT)
-+MIME_SO=mime.$(EXT)
++SOCKET_SO=libsocket.$(EXT)
++MIME_SO=libmime.$(EXT)
  UNIX_SO=unix.$(EXT)
  
  #------

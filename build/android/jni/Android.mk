@@ -45,13 +45,13 @@ LOCAL_SRC_FILES := deps/libvorbis-libogg-android/libs/$(TARGET_LIBDIR)/libvorbis
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := luasocket
-LOCAL_SRC_FILES := deps/luasocket/src/socket.so
+LOCAL_MODULE := socket
+LOCAL_SRC_FILES := deps/luasocket/src/libsocket.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := luasocketmime
-LOCAL_SRC_FILES := deps/luasocket/src/mime.so
+LOCAL_MODULE := mime
+LOCAL_SRC_FILES := deps/luasocket/src/libmime.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -431,7 +431,8 @@ LOCAL_SRC_FILES += \
 # JSONCPP
 LOCAL_SRC_FILES += jni/lib/jsoncpp/jsoncpp.cpp
 
-LOCAL_SHARED_LIBRARIES := iconv openal ogg vorbis luasocket luasocketmime
+LOCAL_ARM_MODE := arm
+LOCAL_SHARED_LIBRARIES := iconv openal ogg vorbis socket mime
 LOCAL_STATIC_LIBRARIES := Irrlicht freetype curl ssl crypto android_native_app_glue $(PROFILER_LIBS)
 
 ifeq ($(HAVE_LEVELDB), 1)

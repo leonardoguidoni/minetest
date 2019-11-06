@@ -109,8 +109,8 @@ CURL_URL_HTTP = https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.bz2
 LUASOCKET_VERSION = 2.0.2
 LUASOCKET_DIR = $(ANDR_ROOT)/deps/luasocket-$(LUASOCKET_VERSION)
 LUASOCKET_URL_HTTP = http://files.luaforge.net/releases/luasocket/luasocket/luasocket-${LUASOCKET_VERSION}/luasocket-${LUASOCKET_VERSION}.tar.gz
-LUASOCKET_LIB = $(LUASOCKET_DIR)/src/socket.so
-LUASOCKET_MIME_LIB = $(LUASOCKET_DIR)/src/mime.so
+LUASOCKET_LIB = $(LUASOCKET_DIR)/src/libsocket.so
+LUASOCKET_MIME_LIB = $(LUASOCKET_DIR)/src/libmime.so
 LUASOCKET_TIMESTAMP = $(LUASOCKET_DIR)/timestamp
 LUASOCKET_TIMESTAMP_INT = $(ANDR_ROOT)/deps/luasocket_timestamp
 

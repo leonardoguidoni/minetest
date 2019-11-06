@@ -31,7 +31,7 @@ android {
 		versionCode 24
 		versionName "${System.env.VERSION_STR}.${versionCode}"
 		minSdkVersion 14
-		targetSdkVersion 28
+		targetSdkVersion 22
 		applicationId "net.minetest.minetest"
 		manifestPlaceholders = [package: "net.minetest.minetest", project: project.name]
 		ndk {
