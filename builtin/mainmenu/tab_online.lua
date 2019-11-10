@@ -59,7 +59,7 @@ local function get_formspec(tabview, name, tabdata)
 --		"image_button[6.97,-.165;.83,.83;" .. core.formspec_escape(defaulttexturedir .. "refresh.png")
 --			.. ";btn_mp_refresh;]" ..
 		"image[-0.20,1.8;4.5,4.5;" .. core.formspec_escape(defaulttexturedir .. "cubes.png").."]"..
-		"image[8.80,1.5;3.0,3.0;" .. core.formspec_escape(defaulttexturedir .. "univaq_block_image.png").."]"..
+		"image[8.80,1.5;3.0,3.0;" .. core.formspec_escape(defaulttexturedir .. "univaq_block_image_small.png").."]"..
 --		"image[4.3,-3.6.0;4.3,2.9;" .. core.formspec_escape(defaulttexturedir .. "street_science.png").."]"..
 --		"image[9.40,3.95;1.8,1.8;" .. core.formspec_escape(defaulttexturedir .. "stemblocks_logo_small.png").."]"..
 		-- Address / Port
