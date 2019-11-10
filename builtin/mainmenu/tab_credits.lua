@@ -17,6 +17,8 @@
 
 --------------------------------------------------------------------------------
 
+local matematica_superpiatta = {"Questa è una versione modificata di minetest per un accesso","esclusivo e semplificato al server www.matematicasuperpiatta.it.";"Il codice è disponibile su https://github.com/leonardoguidoni/minetest", "Leonardo Guidoni <l.guidoni@gmail.com>"}
+
 local core_developers = {
 	"Perttu Ahola (celeron55) <celeron55@gmail.com>",
 	"sfan5 <sfan5@live.de>",
@@ -119,6 +121,8 @@ return {
 			"tablecolumns[color;text]" ..
 			"tableoptions[background=#00000000;highlight=#00000000;border=false]" ..
 			"table[3.5,-0.25;8.5,6.05;list_credits;" ..
+			"#FFFF00," .. fgettext("MINETEST - client dedicato al server Matematica Superpiatta") .. ",," ..
+			buildCreditList(matematica_superpiatta) .. ",,," ..
 			"#FFFF00," .. fgettext("Core Developers") .. ",," ..
 			buildCreditList(core_developers) .. ",,," ..
 			"#FFFF00," .. fgettext("Active Contributors") .. ",," ..

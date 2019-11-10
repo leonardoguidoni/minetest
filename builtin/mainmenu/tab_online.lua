@@ -59,12 +59,14 @@ local function get_formspec(tabview, name, tabdata)
 --		"image_button[6.97,-.165;.83,.83;" .. core.formspec_escape(defaulttexturedir .. "refresh.png")
 --			.. ";btn_mp_refresh;]" ..
 		"image[-0.20,1.8;4.5,4.5;" .. core.formspec_escape(defaulttexturedir .. "cubes.png").."]"..
-		"image[8.40,0.9;4.3,2.5;" .. core.formspec_escape(defaulttexturedir .. "univaq.png").."]"..
+		"image[8.80,1.5;3.0,3.0;" .. core.formspec_escape(defaulttexturedir .. "univaq_block_image.png").."]"..
 --		"image[4.3,-3.6.0;4.3,2.9;" .. core.formspec_escape(defaulttexturedir .. "street_science.png").."]"..
-		"image[9.40,3.95;1.8,1.8;" .. core.formspec_escape(defaulttexturedir .. "stemblocks_logo_small.png").."]"..
+--		"image[9.40,3.95;1.8,1.8;" .. core.formspec_escape(defaulttexturedir .. "stemblocks_logo_small.png").."]"..
 		-- Address / Port
 		"label[4.35,0.6;" .. fgettext("MATEMATICA SUPERPIATTA ") .. "]" ..
 		"label[4.00,1.3;" .. fgettext("UN VIDEOGIOCO PER LA SCUOLA") .. "]" ..
+		"label[8.1,4.5;" .. fgettext("Università degli Studi dell'Aquila") .. "]" ..
+		"label[5.75,5.1;" .. fgettext("per informazioni: matematicasuperpiatta@gmail.com") .. "]" ..
 --		"field[6,0.75;4.70,0.5;te_address;;" ..
 --			core.formspec_escape(core.settings:get("address")) .. "]" ..
 --		"field[11.1,0.75;1.4,0.5;te_port;;" ..

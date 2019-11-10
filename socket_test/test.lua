@@ -1,0 +1,9 @@
+--package.cpath = "/Users/leo/Library/Application Support/minetest/MS_client/socket_test/Mac-raspberryjammod/share/?.so"
+--package.path = "/Users/leo/Library/Application Support/minetest/MS_client/socket_test/Mac-raspberryjammod/share/?.lua"
+package.cpath = "./Luapower/socket/bin/osx64/clib/?.so;" .. package.cpath
+package.path = "./Luapower/socket/?.lua;" .. package.path
+package.cpath = ".\Luapower\socket\bin\mingw64\clib\?.so;"..package.cpath
+package.path = ".\Luapower\socket\?.lua;"..package.path
+--package.cpath = "./Mac-raspberryjammod/share/?.so"
+--package.path = "./Mac-raspberryjammod/share/?.lua"
+local http = require "socket.http"
