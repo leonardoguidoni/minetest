@@ -106,6 +106,14 @@ CURL_TIMESTAMP = $(CURL_DIR)/timestamp
 CURL_TIMESTAMP_INT = $(ANDR_ROOT)/deps/curl_timestamp
 CURL_URL_HTTP = https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.bz2
 
+LUASOCKET_VERSION = 2.0.2
+LUASOCKET_DIR = $(ANDR_ROOT)/deps/luasocket-$(LUASOCKET_VERSION)
+LUASOCKET_URL_HTTP = http://files.luaforge.net/releases/luasocket/luasocket/luasocket-${LUASOCKET_VERSION}/luasocket-${LUASOCKET_VERSION}.tar.gz
+LUASOCKET_LIB = $(LUASOCKET_DIR)/src/libsocket.so
+LUASOCKET_MIME_LIB = $(LUASOCKET_DIR)/src/libmime.so
+LUASOCKET_TIMESTAMP = $(LUASOCKET_DIR)/timestamp
+LUASOCKET_TIMESTAMP_INT = $(ANDR_ROOT)/deps/luasocket_timestamp
+
 FREETYPE_DIR = $(ANDR_ROOT)/deps/freetype2-android/
 FREETYPE_LIB = $(FREETYPE_DIR)/Android/obj/local/$(TARGET_ABI)/libfreetype2-static.a
 FREETYPE_TIMESTAMP = $(FREETYPE_DIR)timestamp
@@ -135,13 +143,14 @@ endif
 	irrlicht_download clean_irrlicht irrlicht \
 	clean_assets assets sqlite3_download \
 	freetype_download clean_freetype freetype \
+	clean_luasocket luasocket_download luasocket\
 	apk clean_apk \
 	clean_all clean prep_srcdir \
 	install_debug install_release envpaths all \
 	$(ASSETS_TIMESTAMP) $(LEVELDB_TIMESTAMP) \
 	$(OPENAL_TIMESTAMP) $(OGG_TIMESTAMP) \
 	$(IRRLICHT_TIMESTAMP) $(CURL_TIMESTAMP) \
-	$(OPENSSL_TIMESTAMP) \
+	$(OPENSSL_TIMESTAMP) $(LUASOCKET_TIMESTAMP) \
 	$(ANDR_ROOT)/jni/src/android_version.h \
 	$(ANDR_ROOT)/jni/src/android_version_githash.h
 
@@ -610,6 +619,59 @@ $(CURL_LIB): $(CURL_TIMESTAMP) $(OPENSSL_LIB)
 clean_curl :
 	./gradlew cleanCURL
 
+
+$(LUASOCKET_TIMESTAMP) : luasocket_download
+	@LAST_MODIF=$$(find ${LUASOCKET_DIR} -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" "); \
+	if [ $$(basename $$LAST_MODIF) != "timestamp" ] ; then                     \
+		touch ${LUASOCKET_TIMESTAMP};                                           \
+	fi
+
+luasocket_download :
+	@if [ ! -d "deps/luasocket" ] ; then                                        \
+		echo "luasocket sources missing, downloading...";                       \
+		mkdir -p ${ANDR_ROOT}/deps;                                            \
+		cd deps;                                                               \
+		wget ${LUASOCKET_URL_HTTP} || exit 1;                                  \
+		tar -xzf luasocket-${LUASOCKET_VERSION}.tar.gz || exit 1;              \
+		rm luasocket-${LUASOCKET_VERSION}.tar.gz;                              \
+		ln -s luasocket-${LUASOCKET_VERSION} luasocket;                        \
+		cd luasocket;                                                          \
+		patch < ${ANDR_ROOT}/patches/luasocket_config.patch || exit 1;         \
+	fi;
+
+luasocket : $(LUASOCKET_LIB)
+
+$(LUASOCKET_LIB) : $(LUASOCKET_TIMESTAMP)
+	@REFRESH=0;                                                                \
+	if [ ! -e ${LUASOCKET_TIMESTAMP_INT} ] ; then                              \
+		REFRESH=1;                                                             \
+	fi;                                                                        \
+	if [ ! -e ${LUASOCKET_LIB} ] ; then                                        \
+		REFRESH=1;                                                             \
+	fi;                                                                        \
+	if [ ${LUASOCKET_TIMESTAMP} -nt ${LUASOCKET_TIMESTAMP_INT} ] ; then        \
+		REFRESH=1;                                                             \
+	fi;                                                                        \
+	if [ $$REFRESH -ne 0 ] ; then                                              \
+	mkdir -p ${LUASOCKET_DIR};                                                 \
+	echo "changed timestamp for luasocket detected building...";               \
+	cd ${LUASOCKET_DIR};                                                       \
+	export CROSS_PREFIX=${TARGET_TOOLCHAIN};                                   \
+	export CC=${CROSS_CC};                                                     \
+	export CXX=${CROSS_CXX};                                                   \
+	export TARGET_OS=OS_ANDROID_CROSSCOMPILE;                                  \
+	export CFLAGS="$${CFLAGS} ${TARGET_CFLAGS_ADDON}";                         \
+	echo $${CFLAGS};                                                           \
+	$(MAKE) -s || exit 1;                                                      \
+	touch ${LUASOCKET_TIMESTAMP};                                              \
+	touch ${LUASOCKET_TIMESTAMP_INT};                                          \
+	else                                                                       \
+		echo "nothing to be done for luasocket";                               \
+	fi;
+
+clean_luasocket :
+	./gradlew cleanLuaSocket
+
 sqlite3_download: deps/${SQLITE3_FOLDER}/sqlite3.c
 
 deps/${SQLITE3_FOLDER}/sqlite3.c :
@@ -682,7 +744,7 @@ clean_assets :
 	./gradlew cleanAssets
 
 apk: local.properties assets $(ICONV_LIB) $(IRRLICHT_LIB) $(CURL_LIB) $(LEVELDB_TARGET)       \
-	$(OPENAL_LIB) $(OGG_LIB) prep_srcdir $(ANDR_ROOT)/jni/src/android_version.h    \
+	$(OPENAL_LIB) $(OGG_LIB) $(LUASOCKET_LIB) $(LUASOCKET_MIME_LIB) prep_srcdir $(ANDR_ROOT)/jni/src/android_version.h    \
 	$(ANDR_ROOT)/jni/src/android_version_githash.h sqlite3_download
 	+ @export TARGET_LIBDIR=${TARGET_LIBDIR};                                  \
 	export HAVE_LEVELDB=${HAVE_LEVELDB};                                       \

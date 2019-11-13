@@ -45,6 +45,16 @@ LOCAL_SRC_FILES := deps/libvorbis-libogg-android/libs/$(TARGET_LIBDIR)/libvorbis
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
+LOCAL_MODULE := socket
+LOCAL_SRC_FILES := deps/luasocket/src/libsocket.so
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := mime
+LOCAL_SRC_FILES := deps/luasocket/src/libmime.so
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
 LOCAL_MODULE := ssl
 LOCAL_SRC_FILES := deps/openssl/libssl.a
 include $(PREBUILT_STATIC_LIBRARY)
@@ -241,7 +251,6 @@ LOCAL_SRC_FILES := \
 		jni/src/porting_android.cpp               \
 		jni/src/porting.cpp                       \
 		jni/src/profiler.cpp                      \
-		jni/src/quicktune.cpp                     \
 		jni/src/raycast.cpp                       \
 		jni/src/reflowscan.cpp                    \
 		jni/src/remoteplayer.cpp                  \
@@ -290,6 +299,7 @@ LOCAL_SRC_FILES := \
 		jni/src/util/ieee_float.cpp               \
 		jni/src/util/numeric.cpp                  \
 		jni/src/util/pointedthing.cpp             \
+		jni/src/util/quicktune.cpp                \
 		jni/src/util/serialize.cpp                \
 		jni/src/util/sha1.cpp                     \
 		jni/src/util/srp.cpp                      \
@@ -421,7 +431,8 @@ LOCAL_SRC_FILES += \
 # JSONCPP
 LOCAL_SRC_FILES += jni/lib/jsoncpp/jsoncpp.cpp
 
-LOCAL_SHARED_LIBRARIES := iconv openal ogg vorbis
+LOCAL_ARM_MODE := arm
+LOCAL_SHARED_LIBRARIES := iconv openal ogg vorbis socket mime
 LOCAL_STATIC_LIBRARIES := Irrlicht freetype curl ssl crypto android_native_app_glue $(PROFILER_LIBS)
 
 ifeq ($(HAVE_LEVELDB), 1)
