@@ -93,10 +93,10 @@ local function init_globals()
 	local tv_main = tabview_create("maintab", {x = 12, y = 5.4}, {x = 0, y = 0})
 
 	tv_main:set_autosave_tab(true)
-	tv_main:add(tabs.local_game)
+--	tv_main:add(tabs.local_game)
 	tv_main:add(tabs.play_online)
 
-	tv_main:add(tabs.content)
+--	tv_main:add(tabs.content)
 	tv_main:add(tabs.settings)
 	tv_main:add(tabs.about)
 
@@ -110,12 +110,12 @@ local function init_globals()
 
 	-- In case the folder of the last selected game has been deleted,
 	-- display "Minetest" as a header
-	if tv_main.current_tab == "local" then
-		local game = pkgmgr.find_by_gameid(core.settings:get("menu_last_game"))
-		if game == nil then
-			mm_texture.reset()
-		end
-	end
+--	if tv_main.current_tab == "local" then
+--		local game = pkgmgr.find_by_gameid(core.settings:get("menu_last_game"))
+--		if game == nil then
+--			mm_texture.reset()
+--		end
+--	end
 
 	ui.set_default("maintab")
 	tv_main:show()

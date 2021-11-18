@@ -942,7 +942,7 @@ msgstr "Canc"
 
 #: builtin/mainmenu/tab_online.lua
 msgid "Connect"
-msgstr "Connettiti"
+msgstr "Inizia"
 
 #: builtin/mainmenu/tab_online.lua
 msgid "Creative mode"
