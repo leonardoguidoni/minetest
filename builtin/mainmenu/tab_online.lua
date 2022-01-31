@@ -1,3 +1,23 @@
+-- Matematica Superpiatta's environment
+
+SERVER_ADDRESS = "mt.matematicasuperpiatta.it"
+--SERVER_ADDRESS = "0.0.0.0"
+URL_GET = "http://"..SERVER_ADDRESS..":29999"
+
+local http = core.get_http_api()
+
+local function spawnPort()
+--  GET PORT NUMBER BY HTTP REQUEST - START
+	local response = http.fetch_sync({ url = URL_GET })
+        if not response.succeeded then
+                return
+        end
+
+--  GET PORT NUMBER BY HTTP REQUEST - END
+	return response.data
+end
+
+
 --Minetest
 --Copyright (C) 2014 sapier
 --
@@ -15,6 +35,8 @@
 --with this program; if not, write to the Free Software Foundation, Inc.,
 --51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+
+-- Keeping get_sorted_servers() just for safety, Can't be removed? - ACe
 local function get_sorted_servers()
 	local servers = {
 		fav = {},
@@ -66,37 +88,42 @@ local function get_formspec(tabview, name, tabdata)
 
 	local retval =
 		-- Search
-		"field[0.25,0.25;7,0.75;te_search;;" .. core.formspec_escape(tabdata.search_for) .. "]" ..
-		"container[7.25,0.25]" ..
-		"image_button[0,0;0.75,0.75;" .. core.formspec_escape(defaulttexturedir .. "search.png") .. ";btn_mp_search;]" ..
-		"image_button[0.75,0;0.75,0.75;" .. core.formspec_escape(defaulttexturedir .. "clear.png") .. ";btn_mp_clear;]" ..
-		"image_button[1.5,0;0.75,0.75;" .. core.formspec_escape(defaulttexturedir .. "refresh.png") .. ";btn_mp_refresh;]" ..
-		"tooltip[btn_mp_clear;" .. fgettext("Clear") .. "]" ..
-		"tooltip[btn_mp_search;" .. fgettext("Search") .. "]" ..
-		"tooltip[btn_mp_refresh;" .. fgettext("Refresh") .. "]" ..
-		"container_end[]" ..
+--		"field[0.25,0.25;7,0.75;te_search;;" .. core.formspec_escape(tabdata.search_for) .. "]" ..
+--		"container[7.25,0.25]" ..
+--		"image_button[0,0;0.75,0.75;" .. core.formspec_escape(defaulttexturedir .. "search.png") .. ";btn_mp_search;]" ..
+--		"image_button[0.75,0;0.75,0.75;" .. core.formspec_escape(defaulttexturedir .. "clear.png") .. ";btn_mp_clear;]" ..
+--		"image_button[1.5,0;0.75,0.75;" .. core.formspec_escape(defaulttexturedir .. "refresh.png") .. ";btn_mp_refresh;]" ..
+--		"tooltip[btn_mp_clear;" .. fgettext("Clear") .. "]" ..
+--		"tooltip[btn_mp_search;" .. fgettext("Search") .. "]" ..
+--		"tooltip[btn_mp_refresh;" .. fgettext("Refresh") .. "]" ..
+--		"container_end[]" ..
 
-		"container[9.75,0]" ..
-		"box[0,0;5.75,7;#666666]" ..
+-- What to do, w/ this? - ACe
+--		"container[9.75,0]" ..
+--		"box[0,0;5.75,7;#666666]" ..
 
+		"label[4.35,0.6;" .. fgettext("Matematica Superpiatta ") .. "]" ..
+		"label[4.00,1.3;" .. fgettext("Un videogioco per la scuola") .. "]" ..
+		"label[8.1,4.5;" .. fgettext("Università degli Studi dell'Aquila") .. "]" ..
+		"label[5.75,5.1;" .. fgettext("per informazioni: matematicasuperpiatta@gmail.com") .. "]" ..
 		-- Address / Port
-		"label[0.25,0.35;" .. fgettext("Address") .. "]" ..
-		"label[4.25,0.35;" .. fgettext("Port") .. "]" ..
-		"field[0.25,0.5;4,0.75;te_address;;" ..
-			core.formspec_escape(core.settings:get("address")) .. "]" ..
-		"field[4.25,0.5;1.25,0.75;te_port;;" ..
-			core.formspec_escape(core.settings:get("remote_port")) .. "]" ..
+--		"label[0.25,0.35;" .. fgettext("Address") .. "]" ..
+--		"label[4.25,0.35;" .. fgettext("Port") .. "]" ..
+--		"field[0.25,0.5;4,0.75;te_address;;" ..
+--			core.formspec_escape(core.settings:get("address")) .. "]" ..
+--		"field[4.25,0.5;1.25,0.75;te_port;;" ..
+--			core.formspec_escape(core.settings:get("remote_port")) .. "]" ..
 
 		-- Name / Password
-		"label[0.25,1.55;" .. fgettext("Name") .. "]" ..
-		"label[3,1.55;" .. fgettext("Password") .. "]" ..
-		"field[0.25,1.75;2.75,0.75;te_name;;" ..
-			core.formspec_escape(core.settings:get("name")) .. "]" ..
-		"pwdfield[3,1.75;2.5,0.75;te_pwd;]" ..
+--		"label[0.25,1.55;" .. fgettext("Name") .. "]" ..
+--		"label[3,1.55;" .. fgettext("Password") .. "]" ..
+--		"field[0.25,1.75;2.75,0.75;te_name;;" ..
+--			core.formspec_escape(core.settings:get("name")) .. "]" ..
+--		"pwdfield[3,1.75;2.5,0.75;te_pwd;]" ..
 
 		-- Description Background
-		"label[0.25,2.75;" .. fgettext("Server Description") .. "]" ..
-		"box[0.25,3;5.25,2.75;#999999]"..
+--		"label[0.25,2.75;" .. fgettext("Server Description") .. "]" ..
+--		"box[0.25,3;5.25,2.75;#999999]"..
 
 		-- Connect
 		"button[3,6;2.5,0.75;btn_mp_connect;" .. fgettext("Connect") .. "]"
@@ -112,71 +139,72 @@ local function get_formspec(tabview, name, tabdata)
 		end
 	end
 
-	retval = retval .. "container_end[]"
+--	retval = retval .. "container_end[]"
 
 	-- Table
-	retval = retval .. "tablecolumns[" ..
-		"image,tooltip=" .. fgettext("Ping") .. "," ..
-		"0=" .. core.formspec_escape(defaulttexturedir .. "blank.png") .. "," ..
-		"1=" .. core.formspec_escape(defaulttexturedir .. "server_ping_4.png") .. "," ..
-		"2=" .. core.formspec_escape(defaulttexturedir .. "server_ping_3.png") .. "," ..
-		"3=" .. core.formspec_escape(defaulttexturedir .. "server_ping_2.png") .. "," ..
-		"4=" .. core.formspec_escape(defaulttexturedir .. "server_ping_1.png") .. "," ..
-		"5=" .. core.formspec_escape(defaulttexturedir .. "server_favorite.png") .. "," ..
-		"6=" .. core.formspec_escape(defaulttexturedir .. "server_public.png") .. "," ..
-		"7=" .. core.formspec_escape(defaulttexturedir .. "server_incompatible.png") .. ";" ..
-		"color,span=1;" ..
-		"text,align=inline;"..
-		"color,span=1;" ..
-		"text,align=inline,width=4.25;" ..
-		"image,tooltip=" .. fgettext("Creative mode") .. "," ..
-		"0=" .. core.formspec_escape(defaulttexturedir .. "blank.png") .. "," ..
-		"1=" .. core.formspec_escape(defaulttexturedir .. "server_flags_creative.png") .. "," ..
-		"align=inline,padding=0.25,width=1.5;" ..
+--	retval = retval .. "tablecolumns[" ..
+--		"image,tooltip=" .. fgettext("Ping") .. "," ..
+--		"0=" .. core.formspec_escape(defaulttexturedir .. "blank.png") .. "," ..
+--		"1=" .. core.formspec_escape(defaulttexturedir .. "server_ping_4.png") .. "," ..
+--		"2=" .. core.formspec_escape(defaulttexturedir .. "server_ping_3.png") .. "," ..
+--		"3=" .. core.formspec_escape(defaulttexturedir .. "server_ping_2.png") .. "," ..
+--		"4=" .. core.formspec_escape(defaulttexturedir .. "server_ping_1.png") .. "," ..
+--		"5=" .. core.formspec_escape(defaulttexturedir .. "server_favorite.png") .. "," ..
+--		"6=" .. core.formspec_escape(defaulttexturedir .. "server_public.png") .. "," ..
+--		"7=" .. core.formspec_escape(defaulttexturedir .. "server_incompatible.png") .. ";" ..
+--		"color,span=1;" ..
+--		"text,align=inline;"..
+--		"color,span=1;" ..
+--		"text,align=inline,width=4.25;" ..
+--		"image,tooltip=" .. fgettext("Creative mode") .. "," ..
+--		"0=" .. core.formspec_escape(defaulttexturedir .. "blank.png") .. "," ..
+--		"1=" .. core.formspec_escape(defaulttexturedir .. "server_flags_creative.png") .. "," ..
+--		"align=inline,padding=0.25,width=1.5;" ..
 		--~ PvP = Player versus Player
-		"image,tooltip=" .. fgettext("Damage / PvP") .. "," ..
-		"0=" .. core.formspec_escape(defaulttexturedir .. "blank.png") .. "," ..
-		"1=" .. core.formspec_escape(defaulttexturedir .. "server_flags_damage.png") .. "," ..
-		"2=" .. core.formspec_escape(defaulttexturedir .. "server_flags_pvp.png") .. "," ..
-		"align=inline,padding=0.25,width=1.5;" ..
-		"color,align=inline,span=1;" ..
-		"text,align=inline,padding=1]" ..
-		"table[0.25,1;9.25,5.75;servers;"
+--		"image,tooltip=" .. fgettext("Damage / PvP") .. "," ..
+--		"0=" .. core.formspec_escape(defaulttexturedir .. "blank.png") .. "," ..
+--		"1=" .. core.formspec_escape(defaulttexturedir .. "server_flags_damage.png") .. "," ..
+--		"2=" .. core.formspec_escape(defaulttexturedir .. "server_flags_pvp.png") .. "," ..
+--		"align=inline,padding=0.25,width=1.5;" ..
+--		"color,align=inline,span=1;" ..
+--		"text,align=inline,padding=1]" ..
+--		"table[0.25,1;9.25,5.75;servers;"
 
-	local servers = get_sorted_servers()
+--	local servers = get_sorted_servers()
 
-	local dividers = {
-		fav = "5,#ffff00," .. fgettext("Favorites") .. ",,,0,0,,",
-		public = "6,#4bdd42," .. fgettext("Public Servers") .. ",,,0,0,,",
-		incompatible = "7,"..mt_color_grey.."," .. fgettext("Incompatible Servers") .. ",,,0,0,,"
-	}
-	local order = {"fav", "public", "incompatible"}
+--	local dividers = {
+--		fav = "5,#ffff00," .. fgettext("Favorites") .. ",,,0,0,,",
+--		public = "6,#4bdd42," .. fgettext("Public Servers") .. ",,,0,0,,",
+--		incompatible = "7,"..mt_color_grey.."," .. fgettext("Incompatible Servers") .. ",,,0,0,,"
+--	}
+--	local order = {"fav", "public", "incompatible"}
 
-	tabdata.lookup = {} -- maps row number to server
-	local rows = {}
-	for _, section in ipairs(order) do
-		local section_servers = servers[section]
-		if next(section_servers) ~= nil then
-			rows[#rows + 1] = dividers[section]
-			for _, server in ipairs(section_servers) do
-				tabdata.lookup[#rows + 1] = server
-				rows[#rows + 1] = render_serverlist_row(server)
-			end
-		end
-	end
+--	tabdata.lookup = {} -- maps row number to server
+--	local rows = {}
+--	for _, section in ipairs(order) do
+--		local section_servers = servers[section]
+--		if next(section_servers) ~= nil then
+--			rows[#rows + 1] = dividers[section]
+--			for _, server in ipairs(section_servers) do
+--				tabdata.lookup[#rows + 1] = server
+--				rows[#rows + 1] = render_serverlist_row(server)
+--			end
+--		end
+--	end
 
-	retval = retval .. table.concat(rows, ",")
+--	retval = retval .. table.concat(rows, ",")
 
-	if tabdata.selected then
-		retval = retval .. ";" .. tabdata.selected .. "]"
-	else
-		retval = retval .. ";0]"
-	end
+--	if tabdata.selected then
+--		retval = retval .. ";" .. tabdata.selected .. "]"
+--	else
+--		retval = retval .. ";0]"
+--	end
 
 	return retval, "size[15.5,7,false]real_coordinates[true]"
 end
 
 --------------------------------------------------------------------------------
+
 
 local function search_server_list(input)
 	menudata.search_result = nil
@@ -263,10 +291,14 @@ local function set_selected_server(tabdata, idx, server)
 end
 
 local function main_button_handler(tabview, fields, name, tabdata)
-	if fields.te_name then
-		gamedata.playername = fields.te_name
-		core.settings:set("name", fields.te_name)
-	end
+	local serverlist = menudata.search_result or menudata.favorites
+
+--	if fields.te_name then
+--		gamedata.playername = fields.te_name
+--		core.settings:set("name", fields.te_name)
+--	end
+	gamedata.playername = 'test'
+	core.settings:set("name", 'test')
 
 	if fields.servers then
 		local event = core.explode_table_event(fields.servers)
@@ -279,14 +311,18 @@ local function main_button_handler(tabview, fields, name, tabdata)
 					return true
 				end
 
-				gamedata.address    = server.address
-				gamedata.port       = server.port
-				gamedata.playername = fields.te_name
+--				gamedata.address    = server.address
+--				gamedata.port       = server.port
+--				gamedata.playername = fields.te_name
 				gamedata.selected_world = 0
+--				if fields.te_pwd then
+--					gamedata.password = fields.te_pwd
+--				end
 
-				if fields.te_pwd then
-					gamedata.password = fields.te_pwd
-				end
+				gamedata.playername = 'test'
+				gamedata.password   = ''
+				gamedata.address = SERVER_ADDRESS
+				gamedata.port       = tonumber(spawnPort())
 
 				gamedata.servername        = server.name
 				gamedata.serverdescription = server.description
@@ -339,12 +375,20 @@ local function main_button_handler(tabview, fields, name, tabdata)
 		return true
 	end
 
-	if (fields.btn_mp_connect or fields.key_enter)
-			and fields.te_address ~= "" and fields.te_port then
-		gamedata.playername = fields.te_name
-		gamedata.password   = fields.te_pwd
-		gamedata.address    = fields.te_address
-		gamedata.port       = tonumber(fields.te_port)
+--	if (fields.btn_mp_connect or fields.key_enter)
+--			and fields.te_address ~= "" and fields.te_port then
+	if (fields.btn_mp_connect or fields.key_enter) then
+--		gamedata.playername = fields.te_name
+--		gamedata.password   = fields.te_pwd
+--		gamedata.address    = fields.te_address
+--		gamedata.port       = tonumber(fields.te_port)
+
+
+		gamedata.playername = 'test'
+		gamedata.password   = ''
+		gamedata.address = SERVER_ADDRESS
+		gamedata.port       = tonumber(spawnPort())
+
 		gamedata.selected_world = 0
 
 		local idx = core.get_table_index("servers")
@@ -374,8 +418,11 @@ local function main_button_handler(tabview, fields, name, tabdata)
 			})
 		end
 
-		core.settings:set("address",     gamedata.address)
-		core.settings:set("remote_port", gamedata.port)
+-- Really? ACe
+--		core.settings:set("address",     gamedata.address)
+--		core.settings:set("remote_port", gamedata.port)
+		core.settings:set("address",     "")
+        core.settings:set("remote_port", "")
 
 		core.start()
 		return true
