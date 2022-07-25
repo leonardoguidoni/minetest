@@ -1,4 +1,4 @@
-package net.minetest.minetest;
+package it.matematicasuperpiatta.minetest;
 
 import android.content.Context;
 
